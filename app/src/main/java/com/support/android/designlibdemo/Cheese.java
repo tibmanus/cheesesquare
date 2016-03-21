@@ -2,12 +2,14 @@ package com.support.android.designlibdemo;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * Data model class for all data related to a cheese.
  *
  * Created by wessel on 21/03/16.
  */
-public class Cheese {
+public class Cheese implements Serializable {
     /**
      * The resource ID of the {@link Cheese}'s drawable.
      */

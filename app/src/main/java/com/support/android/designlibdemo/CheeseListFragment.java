@@ -59,7 +59,7 @@ public class CheeseListFragment extends Fragment {
         private List<Cheese> mValues;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            public String mBoundString;
+            public Cheese mBoundItem;
 
             public final View mView;
             public final ImageView mImageView;
@@ -98,22 +98,22 @@ public class CheeseListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mBoundString = mValues.get(position).getName();
-            holder.mTextView.setText(holder.mBoundString);
+            holder.mBoundItem = mValues.get(position);
+            holder.mTextView.setText(holder.mBoundItem.getName());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, CheeseDetailActivity.class);
-                    intent.putExtra(CheeseDetailActivity.EXTRA_NAME, holder.mBoundString);
+                    intent.putExtra(CheeseDetailActivity.EXTRA_CHEESE, holder.mBoundItem);
 
                     context.startActivity(intent);
                 }
             });
 
             Glide.with(holder.mImageView.getContext())
-                    .load(Cheeses.getRandomCheeseDrawable())
+                    .load(holder.mBoundItem.getDrawableResId())
                     .fitCenter()
                     .into(holder.mImageView);
         }
