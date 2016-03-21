@@ -43,17 +43,27 @@ public class Cheeses {
     }
 
     /**
-     * Generate a random sub {@link List} of the cheese names in {@link #sCheeseStrings}.
+     * @return A random entry from {@link #sCheeseStrings}.
+     */
+    @NonNull
+    public static String getRandomCheeseName() {
+        return sCheeseStrings[RANDOM.nextInt(sCheeseStrings.length)];
+    }
+
+    /**
+     * Generate a random sub {@link List} of {@link Cheese}s.
      *
-     * @param amount The amount of names to include in the generated {@link List}.
+     * @param amount The amount of {@link Cheese}s to include in the generated {@link List}.
      * @return The randomly generated {@link List}.
      */
     @NonNull
-    public static List<String> getRandomSublist(int amount) {
-        ArrayList<String> list = new ArrayList<>(amount);
-        Random random = new Random();
+    public static List<Cheese> getRandomSublist(int amount) {
+        ArrayList<Cheese> list = new ArrayList<>(amount);
         while (list.size() < amount) {
-            list.add(sCheeseStrings[random.nextInt(sCheeseStrings.length)]);
+            int drawableResId = getRandomCheeseDrawable();
+            String name = getRandomCheeseName();
+            Cheese cheese = new Cheese(drawableResId, name);
+            list.add(cheese);
         }
         return list;
     }

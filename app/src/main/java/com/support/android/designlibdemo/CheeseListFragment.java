@@ -56,7 +56,7 @@ public class CheeseListFragment extends Fragment {
 
         private final TypedValue mTypedValue = new TypedValue();
         private int mBackground;
-        private List<String> mValues;
+        private List<Cheese> mValues;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public String mBoundString;
@@ -78,11 +78,11 @@ public class CheeseListFragment extends Fragment {
             }
         }
 
-        public String getValueAt(int position) {
+        public Cheese getValueAt(int position) {
             return mValues.get(position);
         }
 
-        public SimpleStringRecyclerViewAdapter(Context context, List<String> items) {
+        public SimpleStringRecyclerViewAdapter(Context context, List<Cheese> items) {
             context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
             mBackground = mTypedValue.resourceId;
             mValues = items;
@@ -98,8 +98,8 @@ public class CheeseListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mBoundString = mValues.get(position);
-            holder.mTextView.setText(mValues.get(position));
+            holder.mBoundString = mValues.get(position).getName();
+            holder.mTextView.setText(holder.mBoundString);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
