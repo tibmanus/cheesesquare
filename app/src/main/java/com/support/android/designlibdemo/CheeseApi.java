@@ -25,7 +25,7 @@ public class CheeseApi {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException exception) {
-            throw new IOException(exception);
+            // Ignore.
         } finally {
             if (RANDOM.nextInt(10) >= 7) {
                 throw new IOException("API problem!");
