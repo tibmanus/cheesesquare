@@ -16,6 +16,10 @@
 
 package com.support.android.designlibdemo;
 
+import android.support.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Cheeses {
@@ -36,6 +40,22 @@ public class Cheeses {
             case 4:
                 return R.drawable.cheese_5;
         }
+    }
+
+    /**
+     * Generate a random sub {@link List} of the cheese names in {@link #sCheeseStrings}.
+     *
+     * @param amount The amount of names to include in the generated {@link List}.
+     * @return The randomly generated {@link List}.
+     */
+    @NonNull
+    public static List<String> getRandomSublist(int amount) {
+        ArrayList<String> list = new ArrayList<>(amount);
+        Random random = new Random();
+        while (list.size() < amount) {
+            list.add(sCheeseStrings[random.nextInt(sCheeseStrings.length)]);
+        }
+        return list;
     }
 
     public static final String[] sCheeseStrings = {
