@@ -48,7 +48,7 @@ public class CheeseListFragment extends Fragment {
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(),
-                Cheeses.getRandomSublist(30)));
+                CheeseApi.listCheeses(30)));
     }
 
     public static class SimpleStringRecyclerViewAdapter
