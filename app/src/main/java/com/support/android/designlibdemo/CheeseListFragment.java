@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.List;
 
 public class CheeseListFragment extends Fragment {
@@ -47,8 +48,13 @@ public class CheeseListFragment extends Fragment {
 
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(),
-                CheeseApi.listCheeses(30)));
+
+        try {
+            List<Cheese> cheeses = CheeseApi.listCheeses(30);
+            recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses));
+        } catch (IOException exception) {
+            // Ignore.
+        }
     }
 
     public static class SimpleStringRecyclerViewAdapter
