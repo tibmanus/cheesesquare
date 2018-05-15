@@ -50,6 +50,8 @@ public class CheeseListFragment extends Fragment {
 
                 if (cheeses.getStatus() == Status.SUCCESS) {
                     rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses.getData()));
+                }  else if (cheeses.getStatus() == Status.LOADING) {
+                    // TODO show spinner
                 } else if (cheeses.getStatus() == Status.ERROR) {
                     rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
                     Snackbar.make(rv, "We have trouble reaching the internet", Snackbar.LENGTH_LONG)

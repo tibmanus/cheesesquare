@@ -14,6 +14,12 @@ class CheeseLiveData : LiveData<Resource<List<Cheese>>>() {
 
     @SuppressLint("StaticFieldLeak")
     inner class CheeseTask : AsyncTask<Void, Void, Resource<List<Cheese>>>() {
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            value = Resource.loading(null)
+        }
+
         override fun doInBackground(vararg p0: Void?): Resource<List<Cheese>>? {
             var count = 0
             val maxTries = 5
