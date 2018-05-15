@@ -30,6 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -42,25 +44,33 @@ public class CheeseListFragment extends Fragment {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            RecyclerView rv = (RecyclerView) inflater.inflate(
+            LinearLayout view = (LinearLayout) inflater.inflate(
                     R.layout.fragment_cheese_list, container, false);
+
+            RecyclerView rv = view.findViewById(R.id.recyclerview);
+            ProgressBar pb = view.findViewById(R.id.progressBar);
             CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
             viewModel.getCheeses().observe(this, cheeses -> {
                 if (cheeses == null) return;
 
                 if (cheeses.getStatus() == Status.SUCCESS) {
+                    rv.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
                     rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses.getData()));
                 }  else if (cheeses.getStatus() == Status.LOADING) {
-                    // TODO show spinner
+                    rv.setVisibility(View.GONE);
+                    pb.setVisibility(View.VISIBLE);
                 } else if (cheeses.getStatus() == Status.ERROR) {
+                    rv.setVisibility(View.GONE);
+                    pb.setVisibility(View.GONE);
                     rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
-                    Snackbar.make(rv, "We have trouble reaching the internet", Snackbar.LENGTH_LONG)
+                    Snackbar.make(view, "We have trouble reaching the internet", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });
 
         setupRecyclerView(rv);
-        return rv;
+        return view;
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
