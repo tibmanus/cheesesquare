@@ -16,6 +16,8 @@
 
 package com.support.android.designlibdemo;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,19 +44,14 @@ public class CheeseListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView rv = (RecyclerView) inflater.inflate(
                 R.layout.fragment_cheese_list, container, false);
-        setupRecyclerView(rv);
+        CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
+        setupRecyclerView(rv, viewModel.getCheeses());
         return rv;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
+    private void setupRecyclerView(RecyclerView recyclerView, List<Cheese> cheeses) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-
-        try {
-            List<Cheese> cheeses = CheeseApi.listCheeses(30);
-            recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses));
-        } catch (IOException exception) {
-            // Ignore.
-        }
+        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses));
     }
 
     public static class SimpleStringRecyclerViewAdapter
