@@ -25,7 +25,7 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="visible"/>
+        tools:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -35,5 +35,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         tools:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/connection_error" />
 
 </LinearLayout>

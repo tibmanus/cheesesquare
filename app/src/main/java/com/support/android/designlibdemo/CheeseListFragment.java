@@ -16,6 +16,7 @@
 
 package com.support.android.designlibdemo;
 
+import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -41,36 +42,67 @@ import java.util.List;
 
 public class CheeseListFragment extends Fragment {
 
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            LinearLayout view = (LinearLayout) inflater.inflate(
-                    R.layout.fragment_cheese_list, container, false);
+    CheeseViewModel viewModel;
+    private RecyclerView rv;
+    private ProgressBar pb;
+    private TextView et;
 
-            RecyclerView rv = view.findViewById(R.id.recyclerview);
-            ProgressBar pb = view.findViewById(R.id.progressBar);
-            CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
-            viewModel.getCheeses().observe(this, cheeses -> {
-                if (cheeses == null) return;
+    enum STATE {
+        RecyclerView, ProgressBar, ErrorText
+    }
 
-                if (cheeses.getStatus() == Status.SUCCESS) {
-                    rv.setVisibility(View.VISIBLE);
-                    pb.setVisibility(View.GONE);
-                    rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses.getData()));
-                }  else if (cheeses.getStatus() == Status.LOADING) {
-                    rv.setVisibility(View.GONE);
-                    pb.setVisibility(View.VISIBLE);
-                } else if (cheeses.getStatus() == Status.ERROR) {
-                    rv.setVisibility(View.GONE);
-                    pb.setVisibility(View.GONE);
-                    rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
-                    Snackbar.make(view, "We have trouble reaching the internet", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LinearLayout view = (LinearLayout) inflater.inflate(
+                R.layout.fragment_cheese_list, container, false);
+
+        rv = view.findViewById(R.id.recyclerview);
+        pb = view.findViewById(R.id.progressBar);
+        et = view.findViewById(R.id.errorText);
+        viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
+
+        et.setOnClickListener(v -> viewModel.refreshCheeses());
+        viewModel.getCheeses().observe(this, cheeses -> {
+            if (cheeses == null) return;
+
+            if (cheeses.getStatus() == Status.SUCCESS) {
+                show(STATE.RecyclerView);
+                rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses.getData()));
+            }  else if (cheeses.getStatus() == Status.LOADING) {
+                show(STATE.ProgressBar);
+                rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
+            } else if (cheeses.getStatus() == Status.ERROR) {
+                show(STATE.ErrorText);
+                rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
+            }
+        });
 
         setupRecyclerView(rv);
         return view;
+    }
+
+    private void show(STATE state) {
+        switch (state) {
+            case RecyclerView: {
+                rv.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
+                et.setVisibility(View.GONE);
+                break;
+            }
+            case ProgressBar: {
+                rv.setVisibility(View.GONE);
+                pb.setVisibility(View.VISIBLE);
+                et.setVisibility(View.GONE);
+                break;
+            }
+            case ErrorText: {
+                rv.setVisibility(View.GONE);
+                pb.setVisibility(View.GONE);
+                et.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {

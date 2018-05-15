@@ -9,11 +9,15 @@ import java.io.IOException
 class CheeseLiveData : LiveData<Resource<List<Cheese>>>() {
 
     init {
+        refreshValue()
+    }
+
+    fun refreshValue() {
         CheeseTask().execute()
     }
 
     @SuppressLint("StaticFieldLeak")
-    inner class CheeseTask : AsyncTask<Void, Void, Resource<List<Cheese>>>() {
+    private inner class CheeseTask : AsyncTask<Void, Void, Resource<List<Cheese>>>() {
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -22,7 +26,7 @@ class CheeseLiveData : LiveData<Resource<List<Cheese>>>() {
 
         override fun doInBackground(vararg p0: Void?): Resource<List<Cheese>>? {
             var count = 0
-            val maxTries = 5
+            val maxTries = 2
             return try {
                 Resource.success(CheeseApi.listCheeses(30))
             } catch (e: IOException) {
