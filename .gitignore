@@ -16,3 +16,4 @@ build/
 .gradle/
 .idea
 *.iml
+.DS_Store
