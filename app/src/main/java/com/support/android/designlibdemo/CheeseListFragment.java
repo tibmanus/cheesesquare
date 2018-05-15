@@ -16,12 +16,12 @@
 
 package com.support.android.designlibdemo;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,20 +34,29 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Observer;
+
 
 public class CheeseListFragment extends Fragment {
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(
-                R.layout.fragment_cheese_list, container, false);
-        CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
-        viewModel.getCheeses().observe(this, cheeses ->
-                rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses)));
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            RecyclerView rv = (RecyclerView) inflater.inflate(
+                    R.layout.fragment_cheese_list, container, false);
+            CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
+            viewModel.getCheeses().observe(this, cheeses -> {
+                if (cheeses == null) return;
+
+                if (cheeses.getStatus() == Status.SUCCESS) {
+                    rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses.getData()));
+                } else if (cheeses.getStatus() == Status.ERROR) {
+                    rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
+                    Snackbar.make(rv, "We have trouble reaching the internet", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+
         setupRecyclerView(rv);
         return rv;
     }
