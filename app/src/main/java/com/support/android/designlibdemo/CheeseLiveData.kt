@@ -14,16 +14,30 @@ class CheeseLiveData : LiveData<List<Cheese>>() {
     }
 
     private fun updateValue() {
-        var count = 0
-        val maxTries = 5
-        if (value == null) {
+        CheeseTask().execute()
+    }
+
+
+    inner class CheeseTask : AsyncTask<Void, Void, List<Cheese>>() {
+        override fun doInBackground(vararg p0: Void?): List<Cheese>? {
+            var count = 0
+            val maxTries = 5
             try {
-                value = CheeseApi.listCheeses(30)
+                return CheeseApi.listCheeses(30)
             } catch (e: IOException) {
                 Log.d("CheeseLiveData", "Api error, retry...")
-                if (++count >= maxTries) throw e
+                if (++count >= maxTries) {
+                    Log.d("CheeseLiveData", e.toString())
+                }
+                return null
             }
         }
+
+        override fun onPostExecute(result: List<Cheese>?) {
+            super.onPostExecute(result)
+            value = result
+        }
+
     }
 
 }
