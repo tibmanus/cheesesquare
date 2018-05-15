@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Observer;
 
 public class CheeseListFragment extends Fragment {
 
@@ -45,13 +46,15 @@ public class CheeseListFragment extends Fragment {
         RecyclerView rv = (RecyclerView) inflater.inflate(
                 R.layout.fragment_cheese_list, container, false);
         CheeseViewModel viewModel = ViewModelProviders.of(this).get(CheeseViewModel.class);
-        setupRecyclerView(rv, viewModel.getCheeses());
+        viewModel.getCheeses().observe(this, cheeses ->
+                rv.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses)));
+        setupRecyclerView(rv);
         return rv;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView, List<Cheese> cheeses) {
+    private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), cheeses));
+        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), null));
     }
 
     public static class SimpleStringRecyclerViewAdapter
@@ -123,7 +126,7 @@ public class CheeseListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mValues == null ? 0 : mValues.size();
         }
     }
 }

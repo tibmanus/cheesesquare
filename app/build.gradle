@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 repositories {
@@ -27,7 +31,7 @@ repositories {
 dependencies {
     def support_library = "26.1.0"
     def lifecycle_version = "1.1.1"
-    
+
     implementation "com.android.support:design:$support_library"
     implementation "com.android.support:cardview-v7:$support_library"
 
