@@ -7,16 +7,9 @@ import java.io.IOException
 
 class CheeseLiveData : LiveData<List<Cheese>>() {
 
-    @Override
-    override fun onActive() {
-        super.onActive()
-        updateValue()
-    }
-
-    private fun updateValue() {
+    init {
         CheeseTask().execute()
     }
-
 
     inner class CheeseTask : AsyncTask<Void, Void, List<Cheese>>() {
         override fun doInBackground(vararg p0: Void?): List<Cheese>? {
